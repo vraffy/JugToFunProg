@@ -14,14 +14,23 @@ public class Polarity extends Annotation {
     }
 
 
-    /**
-     * Valore che rappresenta l'intensità della polarità associata a un testo: 0 = massimo della
-     * negatività; 100 = massimo della positività.
+    //@formatter:off
+    /** 
+     * Valore che rappresenta l'intensità della polarità associata a un testo: 
+     * 0 = massimo della negatività; 
+     * 100 = massimo della positività.
      */
+    // @formatter:on
     public int getValue() {
         return value;
     }
 
+    public Mood getMood() {
+        if (value <= 50) {
+            return Mood.NEGATIVE;
+        }
 
+        return Mood.POSITIVE;
+    }
 
 }

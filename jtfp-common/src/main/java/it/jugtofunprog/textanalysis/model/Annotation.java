@@ -6,9 +6,9 @@ package it.jugtofunprog.textanalysis.model;
  */
 public class Annotation {
 
+    private final int id;
     private final int begin;
     private final int end;
-    private final int id;
 
     public Annotation(final int id, final int begin, final int end) {
         this.id = id;
@@ -18,6 +18,10 @@ public class Annotation {
         }
         this.begin = begin;
         this.end = end;
+    }
+
+    public int getId() {
+        return id;
     }
 
     /**
@@ -34,10 +38,6 @@ public class Annotation {
      */
     public int getEnd() {
         return end;
-    }
-
-    public int getId() {
-        return id;
     }
 
 }

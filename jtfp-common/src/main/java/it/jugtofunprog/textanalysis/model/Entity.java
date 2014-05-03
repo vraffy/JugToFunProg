@@ -6,8 +6,8 @@ public class Entity extends Annotation {
         LOCATION, PERSON
     }
 
-    private final String iri;
     private final EntityType type;
+    private final String iri;
 
     public Entity(final int id, final int begin, final int end, final EntityType type, final String iri) {
         super(id, begin, end);
@@ -17,19 +17,19 @@ public class Entity extends Annotation {
     }
 
     /**
+     * Tipo di entità riconosciuta all'interno del testo.
+     */
+    public EntityType getType() {
+        return type;
+    }
+
+    /**
      * IRI associato all'entità riconosciuta all'interno del testo.
      * 
      * @see http://it.wikipedia.org/wiki/Internationalized_Resource_Identifier
      */
     public String getIri() {
         return iri;
-    }
-
-    /**
-     * Tipo di entità riconosciuta all'interno del testo.
-     */
-    public EntityType getType() {
-        return type;
     }
 
 }
