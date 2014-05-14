@@ -2,12 +2,12 @@ package it.jugtofunprog.textanalysis
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsJavaMap
-
 import it.jugtofunprog.textanalysis.model.AnalyzedText
 import it.jugtofunprog.textanalysis.model.Entity
 import it.jugtofunprog.textanalysis.model.Entity.EntityType
 import it.jugtofunprog.textanalysis.model.Mood
 import it.jugtofunprog.textanalysis.model.Polarity
+import it.jugtofunprog.textanalysis.model.Annotation
 
 class ScalaAnalyzedTextProcessor extends AnalyzedTextProcessor {
 
@@ -24,11 +24,20 @@ class ScalaAnalyzedTextProcessor extends AnalyzedTextProcessor {
     firstPol.map(pol => pol.getMood()).getOrElse(Mood.NONE);
   }
 
-  override def indexPersons(analyzedText: AnalyzedText) = {
+  override def indexPersons(analyzedText: AnalyzedText) =
+    indexEntities(analyzedText, { case a: Entity => a.getType().equals(EntityType.PERSON) })
+
+  override def indexLocations(analyzedText: AnalyzedText) =
+    indexEntities(analyzedText, { case a: Entity => a.getType().equals(EntityType.LOCATION) })
+
+  override def indexShortEntities(analyzedText: AnalyzedText, maxLength: Int) =
+    indexEntities(analyzedText, { case a: Entity => (a.getEnd() - a.getBegin() <= maxLength) })
+
+  private def indexEntities(analyzedText: AnalyzedText, predicate: Annotation => Boolean) = {
 
     // scorre la lista delle annotazioni presenti in un AnalyzedText e restituisce
-    // quelle di tipo Entity che abbiano associato un type PERSON
-    val persons = analyzedText.getAnnotations() filter { case a: Entity => a.getType().equals(EntityType.PERSON) }
+    // quelle che soddisfano il predicato
+    val persons = analyzedText.getAnnotations() filter predicate
 
     // converte ogni elemento della collezione persons in una coppia costituita dal begin dell'annotazione
     // e dall'annotazione stessa, quindi trasforma la lista di coppie in una mappa

@@ -41,7 +41,7 @@ public abstract class AnalyzedTextProcessorTest {
         final AnalyzedText analyzedText = new AnalyzedText("questo testo parla di Torino, Cuneo e Einstein, ma non esprime sentimenti");
         analyzedText.addAnnotation(new Entity(0, 22, 28, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Torino"));
         analyzedText.addAnnotation(new Entity(1, 30, 35, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Cuneo"));
-        analyzedText.addAnnotation(new Entity(2, 38, 46, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Einstein"));
+        analyzedText.addAnnotation(new Entity(2, 38, 46, EntityType.PERSON, "https://it.wikipedia.org/wiki/Einstein"));
 
         final Mood mood = processor.extractMood(analyzedText);
 
@@ -64,7 +64,7 @@ public abstract class AnalyzedTextProcessorTest {
     public void extractMoodFromAnalyzedTextWithPositivePolarity() {
 
         final AnalyzedText analyzedText = new AnalyzedText("Einstein è stato un grande scienziato");
-        analyzedText.addAnnotation(new Entity(0, 0, 8, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Einstein"));
+        analyzedText.addAnnotation(new Entity(0, 0, 8, EntityType.PERSON, "https://it.wikipedia.org/wiki/Einstein"));
         analyzedText.addAnnotation(new Polarity(0, 0, analyzedText.getText().length(), 89));
 
         final Mood mood = processor.extractMood(analyzedText);
@@ -128,6 +128,81 @@ public abstract class AnalyzedTextProcessorTest {
         assertThat(personIdx.get(67).getId(), is(2));
     }
 
+    /** indexLocations */
+
+    @Test
+    public void indexLocationsFromAnalyzedTextWithoutAnnotations() {
+
+        final AnalyzedText analyzedText = new AnalyzedText("testo senza annotazioni");
+
+        Map<Integer, Annotation> personIdx = processor.indexLocations(analyzedText);
+
+        assertThat(personIdx.size(), is(0));
+    }
+
+    @Test
+    public void indexLocationsFromAnalyzedTextWithoutLocationAnnotations() {
+
+        final AnalyzedText analyzedText = new AnalyzedText("Einstein è stato un grande scienziato");
+        analyzedText.addAnnotation(new Entity(0, 0, 8, EntityType.PERSON, "https://it.wikipedia.org/wiki/Einstein"));
+
+        Map<Integer, Annotation> personIdx = processor.indexLocations(analyzedText);
+
+        assertThat(personIdx.size(), is(0));
+    }
+
+    @Test
+    public void indexLocationsFromAnalyzedTextWithPersonAnnotations() {
+
+        final AnalyzedText analyzedText =
+                new AnalyzedText(
+                        "Il 29 settembre del 1901 nasceva a Roma Enrico Fermi. Paragonato a Galileo, Fermi è stato uno scienziato brillante. È morto a Chicago nel 1954.");
+        analyzedText.addAnnotation(new Entity(0, 35, 39, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Roma"));
+        analyzedText.addAnnotation(new Entity(1, 40, 52, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(2, 67, 74, EntityType.PERSON, "https://it.wikipedia.org/wiki/Galileo"));
+        analyzedText.addAnnotation(new Entity(3, 76, 80, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(4, 126, 133, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Chicago"));
+
+        Map<Integer, Annotation> personIdx = processor.indexLocations(analyzedText);
+
+        assertThat(personIdx.size(), is(2));
+        assertThat(personIdx.get(35).getId(), is(0));
+        assertThat(personIdx.get(126).getId(), is(4));
+    }
+    
+
+    /** indexShortEntities */
+
+    @Test
+    public void indexShortEntitiesFromAnalyzedTextWithoutAnnotations() {
+
+        final AnalyzedText analyzedText = new AnalyzedText("testo senza annotazioni");
+
+        Map<Integer, Annotation> personIdx = processor.indexShortEntities(analyzedText, 10);
+
+        assertThat(personIdx.size(), is(0));
+    }
+
+    @Test
+    public void indexShortEntitiesFromAnalyzedTextWithMultipleAnnotations() {
+
+        final AnalyzedText analyzedText =
+                new AnalyzedText(
+                        "Il 29 settembre del 1901 nasceva a Roma Enrico Fermi. Paragonato a Galileo, Fermi è stato uno scienziato brillante. È morto a Chicago nel 1954.");
+        analyzedText.addAnnotation(new Entity(0, 35, 39, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Roma"));
+        analyzedText.addAnnotation(new Entity(1, 40, 52, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(2, 67, 74, EntityType.PERSON, "https://it.wikipedia.org/wiki/Galileo"));
+        analyzedText.addAnnotation(new Entity(3, 76, 80, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(4, 126, 133, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Chicago"));
+
+        Map<Integer, Annotation> personIdx = processor.indexShortEntities(analyzedText, 10);
+
+        assertThat(personIdx.size(), is(4));
+        assertThat(personIdx.get(35).getId(), is(0));
+        assertThat(personIdx.get(126).getId(), is(4));
+        assertThat(personIdx.get(67).getId(), is(2));
+        assertThat(personIdx.get(76).getId(), is(3));
+    }
 
     protected abstract AnalyzedTextProcessor getProcessor();
 }

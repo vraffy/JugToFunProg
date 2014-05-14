@@ -30,6 +30,18 @@ public class JavaAnalyzedTextProcessor implements AnalyzedTextProcessor {
         return null;
     }
 
+    @Override
+    public Map<Integer, Annotation> indexLocations(AnalyzedText analyzedText) {
+        // TODO your code here
+        return null;
+    }
+
+    @Override
+    public Map<Integer, Annotation> indexShortEntities(AnalyzedText analyzedText, int maxLength) {
+        // TODO your code here
+        return null;
+    }
+
 
 
 }
