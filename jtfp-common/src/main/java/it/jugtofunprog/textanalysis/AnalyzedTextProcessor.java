@@ -1,7 +1,10 @@
 package it.jugtofunprog.textanalysis;
 
 import it.jugtofunprog.textanalysis.model.AnalyzedText;
+import it.jugtofunprog.textanalysis.model.Annotation;
 import it.jugtofunprog.textanalysis.model.Mood;
+
+import java.util.Map;
 
 public interface AnalyzedTextProcessor {
 
@@ -19,5 +22,19 @@ public interface AnalyzedTextProcessor {
      */
     //@formatter:on
     public Mood extractMood(AnalyzedText analyzedText);
+    
+    
+  //@formatter:off
+    /** 
+     * Estrae l'elenco delle entità di tipo PERSON riconosciute all'interno di un testo analizzato.
+     * 
+     * Tra tutte le annotazioni presenti devono essere prese in considerazione solo quelle di tipo Entity
+     * che abbiano type uguale a PERSON.
+     * Deve essere restituita una mappa che abbia per chiave la posizione iniziale dell'entità riconosciuta
+     * e come valore l'entità stessa.
+     */
+    //@formatter:on
+    public Map<Integer, Annotation> indexPersons(AnalyzedText analyzedText);
+    
 
 }

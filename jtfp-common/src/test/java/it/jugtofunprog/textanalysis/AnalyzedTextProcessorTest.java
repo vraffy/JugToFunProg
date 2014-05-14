@@ -1,13 +1,17 @@
 package it.jugtofunprog.textanalysis;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import it.jugtofunprog.textanalysis.model.AnalyzedText;
+import it.jugtofunprog.textanalysis.model.Annotation;
 import it.jugtofunprog.textanalysis.model.Entity;
 import it.jugtofunprog.textanalysis.model.Entity.EntityType;
 import it.jugtofunprog.textanalysis.model.Mood;
 import it.jugtofunprog.textanalysis.model.Polarity;
 
-import org.hamcrest.Matchers;
-import org.junit.Assert;
+import java.util.Map;
+
 import org.junit.Test;
 
 public abstract class AnalyzedTextProcessorTest {
@@ -18,6 +22,9 @@ public abstract class AnalyzedTextProcessorTest {
         processor = getProcessor();
     }
 
+
+    /** extractMood */
+
     @Test
     public void extractMoodFromAnalyzedTextWithoutAnnotations() {
 
@@ -25,7 +32,7 @@ public abstract class AnalyzedTextProcessorTest {
 
         final Mood mood = processor.extractMood(analyzedText);
 
-        Assert.assertThat(mood, Matchers.equalTo(Mood.NONE));
+        assertThat(mood, equalTo(Mood.NONE));
     }
 
     @Test
@@ -38,7 +45,7 @@ public abstract class AnalyzedTextProcessorTest {
 
         final Mood mood = processor.extractMood(analyzedText);
 
-        Assert.assertThat(mood, Matchers.equalTo(Mood.NONE));
+        assertThat(mood, equalTo(Mood.NONE));
     }
 
     @Test
@@ -50,7 +57,7 @@ public abstract class AnalyzedTextProcessorTest {
 
         final Mood mood = processor.extractMood(analyzedText);
 
-        Assert.assertThat(mood, Matchers.equalTo(Mood.NEGATIVE));
+        assertThat(mood, equalTo(Mood.NEGATIVE));
     }
 
     @Test
@@ -62,7 +69,7 @@ public abstract class AnalyzedTextProcessorTest {
 
         final Mood mood = processor.extractMood(analyzedText);
 
-        Assert.assertThat(mood, Matchers.equalTo(Mood.POSITIVE));
+        assertThat(mood, equalTo(Mood.POSITIVE));
     }
 
     @Test
@@ -75,8 +82,52 @@ public abstract class AnalyzedTextProcessorTest {
 
         final Mood mood = processor.extractMood(analyzedText);
 
-        Assert.assertThat(mood, Matchers.equalTo(Mood.POSITIVE));
+        assertThat(mood, equalTo(Mood.POSITIVE));
     }
+
+    /** indexPersons */
+
+    @Test
+    public void indexPersonsFromAnalyzedTextWithoutAnnotations() {
+
+        final AnalyzedText analyzedText = new AnalyzedText("testo senza annotazioni");
+
+        Map<Integer, Annotation> personIdx = processor.indexPersons(analyzedText);
+
+        assertThat(personIdx.size(), is(0));
+    }
+
+    @Test
+    public void indexPersonsFromAnalyzedTextWithoutPersonAnnotations() {
+
+        final AnalyzedText analyzedText = new AnalyzedText("Mi piace vivere a Torino anche se purtroppo è molto inquinata");
+        analyzedText.addAnnotation(new Entity(0, 18, 24, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Torino"));
+
+        Map<Integer, Annotation> personIdx = processor.indexPersons(analyzedText);
+
+        assertThat(personIdx.size(), is(0));
+    }
+
+    @Test
+    public void indexPersonsFromAnalyzedTextWithPersonAnnotations() {
+
+        final AnalyzedText analyzedText =
+                new AnalyzedText(
+                        "Il 29 settembre del 1901 nasceva a Roma Enrico Fermi. Paragonato a Galileo, Fermi è stato uno scienziato brillante. È morto a Chicago nel 1954.");
+        analyzedText.addAnnotation(new Entity(0, 35, 39, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Roma"));
+        analyzedText.addAnnotation(new Entity(1, 40, 52, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(2, 67, 74, EntityType.PERSON, "https://it.wikipedia.org/wiki/Galileo"));
+        analyzedText.addAnnotation(new Entity(3, 76, 80, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(4, 126, 133, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Chicago"));
+
+        Map<Integer, Annotation> personIdx = processor.indexPersons(analyzedText);
+
+        assertThat(personIdx.size(), is(3));
+        assertThat(personIdx.get(40).getId(), is(1));
+        assertThat(personIdx.get(76).getId(), is(3));
+        assertThat(personIdx.get(67).getId(), is(2));
+    }
+
 
     protected abstract AnalyzedTextProcessor getProcessor();
 }
