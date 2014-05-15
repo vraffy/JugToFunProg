@@ -1,7 +1,7 @@
 package it.jugtofunprog.textanalysis
 
 import org.junit.Test
-import it.jugtofunprog.ScalaAnalyzedTextProcessor
+import it.jugtofunprog.textanalysis.ScalaAnalyzedTextProcessor
 
 @Test
 class ScalaAnalyzedTextProcessorTest extends AnalyzedTextProcessorTest {
