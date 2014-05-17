@@ -1,5 +1,7 @@
 package it.jugtofunprog.textanalysis;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -10,8 +12,10 @@ import it.jugtofunprog.textanalysis.model.Entity.EntityType;
 import it.jugtofunprog.textanalysis.model.Mood;
 import it.jugtofunprog.textanalysis.model.Polarity;
 
+import java.util.Collection;
 import java.util.Map;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 public abstract class AnalyzedTextProcessorTest {
@@ -169,7 +173,7 @@ public abstract class AnalyzedTextProcessorTest {
         assertThat(personIdx.get(35).getId(), is(0));
         assertThat(personIdx.get(126).getId(), is(4));
     }
-    
+
 
     /** indexShortEntities */
 
@@ -203,6 +207,57 @@ public abstract class AnalyzedTextProcessorTest {
         assertThat(personIdx.get(67).getId(), is(2));
         assertThat(personIdx.get(76).getId(), is(3));
     }
+
+
+    /** mostFrequentEntities */
+
+    @Test
+    public void mostFrequentEntitiesFromAnalyzedTextWithoutAnnotations() {
+
+        final AnalyzedText analyzedText = new AnalyzedText("testo senza annotazioni");
+
+        Collection<String> entities = processor.mostFrequentEntities(analyzedText);
+
+        assertThat(entities.size(), is(0));
+    }
+
+    @Test
+    public void mostFrequentEntitiesFromAnalyzedTextWithSingleMaxFreqEntity() {
+
+        final AnalyzedText analyzedText =
+                new AnalyzedText(
+                        "Il 29 settembre del 1901 nasceva a Roma Enrico Fermi. Paragonato a Galileo, Fermi è stato uno scienziato brillante. È morto a Chicago nel 1954.");
+        analyzedText.addAnnotation(new Entity(0, 35, 39, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Roma"));
+        analyzedText.addAnnotation(new Entity(1, 40, 52, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(2, 67, 74, EntityType.PERSON, "https://it.wikipedia.org/wiki/Galileo"));
+        analyzedText.addAnnotation(new Entity(3, 76, 80, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(4, 126, 133, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Chicago"));
+
+        Collection<String> entities = processor.mostFrequentEntities(analyzedText);
+
+        assertThat(entities.size(), is(1));
+        assertThat(entities, contains("https://it.wikipedia.org/wiki/Enrico_Fermi"));
+    }
+
+    @Test
+    public void mostFrequentEntitiesFromAnalyzedTextWithMultipleMaxFreqEntities() {
+
+        final AnalyzedText analyzedText =
+                new AnalyzedText(
+                        "Il 29 settembre del 1901 nasceva a Roma Enrico Fermi. Paragonato a Galileo, Fermi è stato uno scienziato brillante. Nel 1927 occupa la cattedra di fisica teorica a Roma dove formerà il gruppo dei 'ragazzi di via Panisperna'.");
+        analyzedText.addAnnotation(new Entity(0, 35, 39, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Roma"));
+        analyzedText.addAnnotation(new Entity(1, 40, 52, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(2, 67, 74, EntityType.PERSON, "https://it.wikipedia.org/wiki/Galileo"));
+        analyzedText.addAnnotation(new Entity(3, 76, 80, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
+        analyzedText.addAnnotation(new Entity(4, 164, 168, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Roma"));
+
+        Collection<String> entities = processor.mostFrequentEntities(analyzedText);
+
+        assertThat(entities.size(), is(2));
+        assertThat(entities, containsInAnyOrder("https://it.wikipedia.org/wiki/Enrico_Fermi", "https://it.wikipedia.org/wiki/Roma"));
+    }
+
+
 
     protected abstract AnalyzedTextProcessor getProcessor();
 }

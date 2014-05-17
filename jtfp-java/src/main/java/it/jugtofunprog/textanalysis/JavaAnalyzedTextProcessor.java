@@ -6,6 +6,7 @@ import it.jugtofunprog.textanalysis.model.Entity;
 import it.jugtofunprog.textanalysis.model.Mood;
 import it.jugtofunprog.textanalysis.model.Polarity;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,12 @@ public class JavaAnalyzedTextProcessor implements AnalyzedTextProcessor {
 
     @Override
     public Map<Integer, Annotation> indexShortEntities(AnalyzedText analyzedText, int maxLength) {
+        // TODO your code here
+        return null;
+    }
+
+    @Override
+    public Collection<String> mostFrequentEntities(AnalyzedText analyzedText) {
         // TODO your code here
         return null;
     }
