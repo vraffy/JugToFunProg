@@ -4,13 +4,12 @@ import java.util.Collections.emptySet
 import scala.collection.JavaConversions.asJavaSet
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsJavaMap
-
 import it.jugtofunprog.textanalysis.model.AnalyzedText
 import it.jugtofunprog.textanalysis.model.Annotation
 import it.jugtofunprog.textanalysis.model.Entity
-import it.jugtofunprog.textanalysis.model.Entity.EntityType
 import it.jugtofunprog.textanalysis.model.Mood
 import it.jugtofunprog.textanalysis.model.Polarity
+import it.jugtofunprog.ner.model.NamedEntity.EntityType
 
 class ScalaAnalyzedTextProcessor extends AnalyzedTextProcessor {
 

@@ -5,17 +5,16 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import it.jugtofunprog.ner.model.NamedEntity.EntityType;
 import it.jugtofunprog.textanalysis.model.AnalyzedText;
 import it.jugtofunprog.textanalysis.model.Annotation;
 import it.jugtofunprog.textanalysis.model.Entity;
-import it.jugtofunprog.textanalysis.model.Entity.EntityType;
 import it.jugtofunprog.textanalysis.model.Mood;
 import it.jugtofunprog.textanalysis.model.Polarity;
 
 import java.util.Collection;
 import java.util.Map;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 public abstract class AnalyzedTextProcessorTest {
