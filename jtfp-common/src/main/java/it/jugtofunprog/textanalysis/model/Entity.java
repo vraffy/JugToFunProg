@@ -1,10 +1,8 @@
 package it.jugtofunprog.textanalysis.model;
 
-public class Entity extends Annotation {
+import it.jugtofunprog.ner.model.NamedEntity.EntityType;
 
-    public enum EntityType {
-        LOCATION, PERSON
-    }
+public class Entity extends Annotation {
 
     private final EntityType type;
     private final String iri;

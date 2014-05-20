@@ -4,6 +4,7 @@ import it.jugtofunprog.textanalysis.model.AnalyzedText;
 import it.jugtofunprog.textanalysis.model.Annotation;
 import it.jugtofunprog.textanalysis.model.Mood;
 
+import java.util.Collection;
 import java.util.Map;
 
 public interface AnalyzedTextProcessor {
@@ -62,4 +63,19 @@ public interface AnalyzedTextProcessor {
      */
     //@formatter:on
     public Map<Integer, Annotation> indexShortEntities(AnalyzedText analyzedText, int maxLength);
+
+
+    //@formatter:off
+    /** 
+     * Restituisce l'elenco delle entità che compaiono più volte all'interno del testo analizzato.
+     * 
+     * Le annotazioni di tipo Entity devono essere raggruppate in base al numero di volte che la
+     * stessa entità compare nel testo, quindi devono essere selezionate solo quelle con frequenza massima.
+     * Deve essere restituito l'elenco delle IRI delle entità che compaiono con maggiore frequenza.
+     */
+    //@formatter:on
+    public Collection<String> mostFrequentEntities(AnalyzedText analyzedText);
+
+
+
 }
