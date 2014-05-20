@@ -2,7 +2,9 @@ package it.jugtofunprog.ner;
 
 import it.jugtofunprog.ner.model.NamedEntity;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class JavaNamedEntityRecognizer implements NamedEntityRecognizer {
@@ -15,14 +17,20 @@ public class JavaNamedEntityRecognizer implements NamedEntityRecognizer {
 
     @Override
     public Collection<NamedEntity> extractNamedEntities(List<String> tokens) {
-        // TODO your code here
-        return null;
+        Collection<NamedEntity> nes = new ArrayList<>(); 
+        
+        for (String token : tokens) {
+            Collection<NamedEntity> reconized = neRepo.recognize(token);
+            nes.addAll(reconized);
+        }
+        return nes;
     }
 
     @Override
     public Collection<NamedEntity> extractNamedEntities(List<String> tokens, int ngramSize) {
-        // TODO your code here
-        return null;
+        
+        
+        return Collections.emptyList();
     }
 
 }
