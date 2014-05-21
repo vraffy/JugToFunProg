@@ -17,8 +17,8 @@ public class JavaNamedEntityRecognizer implements NamedEntityRecognizer {
 
     @Override
     public Collection<NamedEntity> extractNamedEntities(List<String> tokens) {
-        Collection<NamedEntity> nes = new ArrayList<>(); 
-        
+        Collection<NamedEntity> nes = new ArrayList<>();
+
         for (String token : tokens) {
             Collection<NamedEntity> reconized = neRepo.recognize(token);
             nes.addAll(reconized);
@@ -28,9 +28,22 @@ public class JavaNamedEntityRecognizer implements NamedEntityRecognizer {
 
     @Override
     public Collection<NamedEntity> extractNamedEntities(List<String> tokens, int ngramSize) {
-        
-        
-        return Collections.emptyList();
+        Collection<NamedEntity> nes = new ArrayList<>();
+
+        List<String> nGrams = new ArrayList<>();
+        for (int i = 0; i < tokens.size(); i++) {
+            String token = "";
+            int j = i;
+            for (; j < tokens.size() ; j++) {
+                token += tokens.get(j) + " ";
+                if (j - i <= ngramSize-1) {
+                    nGrams.add(token.trim());
+                }
+            }
+        }
+
+        nes.addAll(extractNamedEntities(nGrams));
+        return nes;
     }
 
 }
