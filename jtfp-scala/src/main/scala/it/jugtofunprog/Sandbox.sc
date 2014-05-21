@@ -26,13 +26,35 @@ object Sandbox {
                                                   //| i enrico, di enrico fermi, enrico, enrico fermi, fermi)
 
   val neRepo = new InMemoryNamedEntityRepository  //> neRepo  : it.jugtofunprog.ner.InMemoryNamedEntityRepository = it.jugtofunpro
-                                                  //| g.ner.InMemoryNamedEntityRepository@6fb05c54
+                                                  //| g.ner.InMemoryNamedEntityRepository@43b64611
   val entities = ngramTokens flatMap (t => asScalaIterable(neRepo.recognize(t)))
                                                   //> entities  : List[it.jugtofunprog.ner.model.NamedEntity] = List(it.jugtofunpr
-                                                  //| og.ner.model.NamedEntity@5b54614c)
+                                                  //| og.ner.model.NamedEntity@620a02d)
 
   entities map (e => e.getIri)                    //> res0: List[String] = List(https://it.wikipedia.org/wiki/Enrico_Fermi)
   
   
   // ngrams map (n => n.foldLeft("")((f, s) => f+" "+s))
+  
+  val list = 1 to 10                              //> list  : scala.collection.immutable.Range.Inclusive = Range(1, 2, 3, 4, 5, 6,
+                                                  //|  7, 8, 9, 10)
+  
+  val filtList = list filter (v => {println(v); v %2 == 0})
+                                                  //> 1
+                                                  //| 2
+                                                  //| 3
+                                                  //| 4
+                                                  //| 5
+                                                  //| 6
+                                                  //| 7
+                                                  //| 8
+                                                  //| 9
+                                                  //| 10
+                                                  //| filtList  : scala.collection.immutable.IndexedSeq[Int] = Vector(2, 4, 6, 8, 
+                                                  //| 10)
+                                                  
+   def filtListLazy = list filter (v => {println(v); v %2 == 0})
+                                                  //> filtListLazy: => scala.collection.immutable.IndexedSeq[Int]
+                                                  
+   // filtListLazy
 }
