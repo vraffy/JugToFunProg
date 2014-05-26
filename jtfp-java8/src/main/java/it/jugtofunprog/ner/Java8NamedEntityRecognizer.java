@@ -20,6 +20,10 @@ public class Java8NamedEntityRecognizer implements NamedEntityRecognizer {
 
     @Override
     public Collection<NamedEntity> extractNamedEntities(List<String> tokens, int ngramSize) {
+        
+        // ??? 
+        
+        
         return null;
     }
 
