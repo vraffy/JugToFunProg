@@ -39,12 +39,12 @@ class ScalaAnalyzedTextProcessor extends AnalyzedTextProcessor {
 
     // scorre la lista delle annotazioni presenti in un AnalyzedText e restituisce
     // quelle che soddisfano il predicato
-    val persons = analyzedText.getAnnotations() filter predicate
+    val entities = analyzedText.getAnnotations() filter predicate
 
     // converte ogni elemento della collezione persons in una coppia costituita dal begin dell'annotazione
     // e dall'annotazione stessa, quindi trasforma la lista di coppie in una mappa
     // Integer.valueOf() serve solo per poter restituire il tipo corretto a Java :|
-    val idx = persons.map(p => (Integer.valueOf(p.getBegin()), p)).toMap
+    val idx = entities.map(p => (Integer.valueOf(p.getBegin()), p)).toMap
 
     // quest'orrore si trova qui solo per poter restituire una mappa gradita a Java :|
     mapAsJavaMap((collection.mutable.Map() ++ idx))

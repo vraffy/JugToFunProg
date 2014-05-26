@@ -138,9 +138,9 @@ public abstract class AnalyzedTextProcessorTest {
 
         final AnalyzedText analyzedText = new AnalyzedText("testo senza annotazioni");
 
-        Map<Integer, Annotation> personIdx = processor.indexLocations(analyzedText);
+        Map<Integer, Annotation> locationIdx = processor.indexLocations(analyzedText);
 
-        assertThat(personIdx.size(), is(0));
+        assertThat(locationIdx.size(), is(0));
     }
 
     @Test
@@ -149,9 +149,9 @@ public abstract class AnalyzedTextProcessorTest {
         final AnalyzedText analyzedText = new AnalyzedText("Einstein è stato un grande scienziato");
         analyzedText.addAnnotation(new Entity(0, 0, 8, EntityType.PERSON, "https://it.wikipedia.org/wiki/Einstein"));
 
-        Map<Integer, Annotation> personIdx = processor.indexLocations(analyzedText);
+        Map<Integer, Annotation> locationIdx = processor.indexLocations(analyzedText);
 
-        assertThat(personIdx.size(), is(0));
+        assertThat(locationIdx.size(), is(0));
     }
 
     @Test
@@ -166,11 +166,11 @@ public abstract class AnalyzedTextProcessorTest {
         analyzedText.addAnnotation(new Entity(3, 76, 80, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
         analyzedText.addAnnotation(new Entity(4, 126, 133, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Chicago"));
 
-        Map<Integer, Annotation> personIdx = processor.indexLocations(analyzedText);
+        Map<Integer, Annotation> locationIdx = processor.indexLocations(analyzedText);
 
-        assertThat(personIdx.size(), is(2));
-        assertThat(personIdx.get(35).getId(), is(0));
-        assertThat(personIdx.get(126).getId(), is(4));
+        assertThat(locationIdx.size(), is(2));
+        assertThat(locationIdx.get(35).getId(), is(0));
+        assertThat(locationIdx.get(126).getId(), is(4));
     }
 
 
@@ -181,9 +181,9 @@ public abstract class AnalyzedTextProcessorTest {
 
         final AnalyzedText analyzedText = new AnalyzedText("testo senza annotazioni");
 
-        Map<Integer, Annotation> personIdx = processor.indexShortEntities(analyzedText, 10);
+        Map<Integer, Annotation> shortEntititiesIdx = processor.indexShortEntities(analyzedText, 10);
 
-        assertThat(personIdx.size(), is(0));
+        assertThat(shortEntititiesIdx.size(), is(0));
     }
 
     @Test
@@ -198,13 +198,13 @@ public abstract class AnalyzedTextProcessorTest {
         analyzedText.addAnnotation(new Entity(3, 76, 80, EntityType.PERSON, "https://it.wikipedia.org/wiki/Enrico_Fermi"));
         analyzedText.addAnnotation(new Entity(4, 126, 133, EntityType.LOCATION, "https://it.wikipedia.org/wiki/Chicago"));
 
-        Map<Integer, Annotation> personIdx = processor.indexShortEntities(analyzedText, 10);
+        Map<Integer, Annotation> shortEntititiesIdx = processor.indexShortEntities(analyzedText, 10);
 
-        assertThat(personIdx.size(), is(4));
-        assertThat(personIdx.get(35).getId(), is(0));
-        assertThat(personIdx.get(126).getId(), is(4));
-        assertThat(personIdx.get(67).getId(), is(2));
-        assertThat(personIdx.get(76).getId(), is(3));
+        assertThat(shortEntititiesIdx.size(), is(4));
+        assertThat(shortEntititiesIdx.get(35).getId(), is(0));
+        assertThat(shortEntititiesIdx.get(126).getId(), is(4));
+        assertThat(shortEntititiesIdx.get(67).getId(), is(2));
+        assertThat(shortEntititiesIdx.get(76).getId(), is(3));
     }
 
 

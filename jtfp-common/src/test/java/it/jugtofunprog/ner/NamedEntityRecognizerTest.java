@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import it.jugtofunprog.ner.model.NamedEntity;
 
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
